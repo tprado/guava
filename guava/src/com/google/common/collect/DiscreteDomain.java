@@ -22,6 +22,8 @@ import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.primitives.Ints;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import ristretto.Mutable;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.NoSuchElementException;
@@ -247,7 +249,7 @@ public abstract class DiscreteDomain<C extends Comparable> {
    * Returns, conceptually, "origin + distance", or equivalently, the result of calling {@link
    * #next} on {@code origin} {@code distance} times.
    */
-  C offset(C origin, long distance) {
+  C offset(@Mutable C origin, long distance) {
     checkNonnegative(distance, "distance");
     for (long i = 0; i < distance; i++) {
       origin = next(origin);

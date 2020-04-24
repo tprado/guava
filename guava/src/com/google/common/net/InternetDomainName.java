@@ -31,6 +31,7 @@ import com.google.thirdparty.publicsuffix.PublicSuffixPatterns;
 import com.google.thirdparty.publicsuffix.PublicSuffixType;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * An immutable well-formed internet domain name, such as {@code com} or {@code foo.co.uk}. Only
@@ -129,7 +130,7 @@ public final class InternetDomainName {
   private final int registrySuffixIndex;
 
   /** Constructor used to implement {@link #from(String)}, and from subclasses. */
-  InternetDomainName(String name) {
+  InternetDomainName(@Mutable String name) {
     // Normalize:
     // * ASCII characters to lowercase
     // * All dot-like characters to '.'

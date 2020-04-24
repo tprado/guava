@@ -17,6 +17,11 @@
   </description>
   <dependencies>
     <dependency>
+      <groupId>io.github.tprado</groupId>
+      <artifactId>ristretto-compiler-plugin</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>failureaccess</artifactId>
       <version>1.0.1</version>
@@ -90,6 +95,20 @@
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <annotationProcessorPaths>
+            <annotationProcessorPath>
+              <groupId>io.github.tprado</groupId>
+              <artifactId>ristretto-compiler-plugin</artifactId>
+              <version>0.1.0-SNAPSHOT</version>
+            </annotationProcessorPath>
+          </annotationProcessorPaths>
+          <compilerArgs>
+            <arg>-Xplugin:ristretto</arg>
+          </compilerArgs>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>

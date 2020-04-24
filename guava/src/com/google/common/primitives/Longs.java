@@ -33,6 +33,7 @@ import java.util.RandomAccess;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Static utility methods pertaining to {@code long} primitives, that are not already found in
@@ -272,7 +273,7 @@ public final class Longs {
    * use a shared {@link java.nio.ByteBuffer} instance, or use {@link
    * com.google.common.io.ByteStreams#newDataOutput()} to get a growable buffer.
    */
-  public static byte[] toByteArray(long value) {
+  public static byte[] toByteArray(@Mutable long value) {
     // Note that this code needs to stay compatible with GWT, which has known
     // bugs when narrowing byte casts of long values occur.
     byte[] result = new byte[8];

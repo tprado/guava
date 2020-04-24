@@ -20,6 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.concurrent.LazyInit;
+import ristretto.Mutable;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -251,7 +253,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
    * @throws NullPointerException if {@code comparator} or any of {@code elements} is null
    */
   public static <E> ImmutableSortedMultiset<E> copyOf(
-      Comparator<? super E> comparator, Iterable<? extends E> elements) {
+      Comparator<? super E> comparator, @Mutable Iterable<? extends E> elements) {
     if (elements instanceof ImmutableSortedMultiset) {
       @SuppressWarnings("unchecked") // immutable collections are always safe for covariant casts
       ImmutableSortedMultiset<E> multiset = (ImmutableSortedMultiset<E>) elements;

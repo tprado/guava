@@ -52,6 +52,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Static utility methods pertaining to {@link Set} instances. Also see this class's counterparts
@@ -1933,7 +1934,7 @@ public final class Sets {
     return changed;
   }
 
-  static boolean removeAllImpl(Set<?> set, Collection<?> collection) {
+  static boolean removeAllImpl(Set<?> set, @Mutable Collection<?> collection) {
     checkNotNull(collection); // for GWT
     if (collection instanceof Multiset) {
       collection = ((Multiset<?>) collection).elementSet();

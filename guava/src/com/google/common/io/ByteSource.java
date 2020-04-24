@@ -29,6 +29,8 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import ristretto.Mutable;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -623,7 +625,7 @@ public abstract class ByteSource {
     }
 
     @Override
-    public ByteSource slice(long offset, long length) {
+    public ByteSource slice(@Mutable long offset, @Mutable long length) {
       checkArgument(offset >= 0, "offset (%s) may not be negative", offset);
       checkArgument(length >= 0, "length (%s) may not be negative", length);
 

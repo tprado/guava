@@ -22,6 +22,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Static utility methods pertaining to {@code String} or {@code CharSequence} instances.
@@ -257,7 +258,7 @@ public final class Strings {
    */
   // TODO(diamondm) consider using Arrays.toString() for array parameters
   public static String lenientFormat(
-      @Nullable String template, @Nullable Object @Nullable ... args) {
+      @Nullable @Mutable String template, @Nullable @Mutable Object @Nullable ... args) {
     template = String.valueOf(template); // null -> "null"
 
     if (args == null) {

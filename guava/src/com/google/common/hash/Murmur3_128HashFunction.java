@@ -32,6 +32,7 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * See MurmurHash3_x64_128 in <a href="http://smhasher.googlecode.com/svn/trunk/MurmurHash3.cpp">the
@@ -187,7 +188,7 @@ final class Murmur3_128HashFunction extends AbstractHashFunction implements Seri
               .array());
     }
 
-    private static long fmix64(long k) {
+    private static long fmix64(@Mutable long k) {
       k ^= k >>> 33;
       k *= 0xff51afd7ed558ccdL;
       k ^= k >>> 33;
@@ -196,14 +197,14 @@ final class Murmur3_128HashFunction extends AbstractHashFunction implements Seri
       return k;
     }
 
-    private static long mixK1(long k1) {
+    private static long mixK1(@Mutable long k1) {
       k1 *= C1;
       k1 = Long.rotateLeft(k1, 31);
       k1 *= C2;
       return k1;
     }
 
-    private static long mixK2(long k2) {
+    private static long mixK2(@Mutable long k2) {
       k2 *= C2;
       k2 = Long.rotateLeft(k2, 33);
       k2 *= C1;

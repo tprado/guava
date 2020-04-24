@@ -25,6 +25,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.MapMaker;
 import com.google.common.math.IntMath;
 import com.google.common.primitives.Ints;
+import ristretto.Mutable;
+
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -554,7 +556,7 @@ public abstract class Striped<L> {
    * java.util.HashMap class.
    */
   // Copied from java/com/google/common/collect/Hashing.java
-  private static int smear(int hashCode) {
+  private static int smear(@Mutable int hashCode) {
     hashCode ^= (hashCode >>> 20) ^ (hashCode >>> 12);
     return hashCode ^ (hashCode >>> 7) ^ (hashCode >>> 4);
   }

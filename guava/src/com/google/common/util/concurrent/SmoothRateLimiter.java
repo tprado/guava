@@ -19,6 +19,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.math.LongMath;
+import ristretto.Mutable;
+
 import java.util.concurrent.TimeUnit;
 
 @GwtIncompatible
@@ -239,7 +241,7 @@ abstract class SmoothRateLimiter extends RateLimiter {
     }
 
     @Override
-    long storedPermitsToWaitTime(double storedPermits, double permitsToTake) {
+    long storedPermitsToWaitTime(double storedPermits, @Mutable double permitsToTake) {
       double availablePermitsAboveThreshold = storedPermits - thresholdPermits;
       long micros = 0;
       // measuring the integral on the right part of the function (the climbing line)

@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.math.RoundingMode;
 import java.util.stream.Collector;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A Bloom filter for instances of {@code T}. A Bloom filter offers an approximate containment test
@@ -407,7 +408,7 @@ public final class BloomFilter<T> implements Predicate<T>, Serializable {
 
   @VisibleForTesting
   static <T> BloomFilter<T> create(
-      Funnel<? super T> funnel, long expectedInsertions, double fpp, Strategy strategy) {
+      Funnel<? super T> funnel, @Mutable long expectedInsertions, double fpp, Strategy strategy) {
     checkNotNull(funnel);
     checkArgument(
         expectedInsertions >= 0, "Expected insertions (%s) must be >= 0", expectedInsertions);
@@ -517,7 +518,7 @@ public final class BloomFilter<T> implements Predicate<T>, Serializable {
    * @param p false positive rate (must be 0 < p < 1)
    */
   @VisibleForTesting
-  static long optimalNumOfBits(long n, double p) {
+  static long optimalNumOfBits(long n, @Mutable double p) {
     if (p == 0) {
       p = Double.MIN_VALUE;
     }

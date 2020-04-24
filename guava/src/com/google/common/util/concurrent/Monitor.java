@@ -28,6 +28,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BooleanSupplier;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A synchronization abstraction supporting waiting on arbitrary boolean conditions.
@@ -1205,7 +1206,7 @@ public final class Monitor {
 
   /** Caller should check before calling that guard is not satisfied. */
   @GuardedBy("lock")
-  private boolean awaitNanos(Guard guard, long nanos, boolean signalBeforeWaiting)
+  private boolean awaitNanos(Guard guard, @Mutable long nanos, boolean signalBeforeWaiting)
       throws InterruptedException {
     boolean firstTime = true;
     try {

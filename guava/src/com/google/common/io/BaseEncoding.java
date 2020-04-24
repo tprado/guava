@@ -36,6 +36,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A binary encoding scheme for reversibly translating between byte sequences and printable ASCII
@@ -226,7 +227,7 @@ public abstract class BaseEncoding {
    *
    * @throws DecodingException if the input is not a valid encoded string according to this
    *     encoding.
-   */ final byte[] decodeChecked(CharSequence chars)
+   */ final byte[] decodeChecked(@Mutable CharSequence chars)
       throws DecodingException {
     chars = trimTrailingPadding(chars);
     byte[] tmp = new byte[maxDecodedSize(chars.length())];
@@ -688,7 +689,7 @@ public abstract class BaseEncoding {
     }
 
     @Override
-    public boolean canDecode(CharSequence chars) {
+    public boolean canDecode(@Mutable CharSequence chars) {
       checkNotNull(chars);
       chars = trimTrailingPadding(chars);
       if (!alphabet.isValidPaddingStartPosition(chars.length())) {
@@ -703,7 +704,7 @@ public abstract class BaseEncoding {
     }
 
     @Override
-    int decodeTo(byte[] target, CharSequence chars) throws DecodingException {
+    int decodeTo(byte[] target, @Mutable CharSequence chars) throws DecodingException {
       checkNotNull(target);
       chars = trimTrailingPadding(chars);
       if (!alphabet.isValidPaddingStartPosition(chars.length())) {
@@ -963,7 +964,7 @@ public abstract class BaseEncoding {
     }
 
     @Override
-    int decodeTo(byte[] target, CharSequence chars) throws DecodingException {
+    int decodeTo(byte[] target, @Mutable CharSequence chars) throws DecodingException {
       checkNotNull(target);
       chars = trimTrailingPadding(chars);
       if (!alphabet.isValidPaddingStartPosition(chars.length())) {

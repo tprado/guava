@@ -32,6 +32,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Predicate;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A {@link Collection} whose contents will never change, and which offers a few additional
@@ -192,7 +193,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
 
   @CanIgnoreReturnValue
   @Override
-  public final <T> T[] toArray(T[] other) {
+  public final <T> T[] toArray(@Mutable T[] other) {
     checkNotNull(other);
     int size = size();
 
@@ -356,7 +357,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
    * offset. Returns {@code offset + size()}.
    */
   @CanIgnoreReturnValue
-  int copyIntoArray(Object[] dst, int offset) {
+  int copyIntoArray(Object[] dst, @Mutable int offset) {
     for (E e : this) {
       dst[offset++] = e;
     }

@@ -29,6 +29,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.Serializable;
 import java.util.function.BiConsumer;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Implementation of {@link ImmutableMap} with two or more entries.
@@ -140,7 +141,7 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
    */
   @CanIgnoreReturnValue
   static int checkNoConflictInKeyBucket(
-      Object key, Entry<?, ?> entry, @Nullable ImmutableMapEntry<?, ?> keyBucketHead) {
+      Object key, Entry<?, ?> entry, @Mutable @Nullable ImmutableMapEntry<?, ?> keyBucketHead) {
     int bucketSize = 0;
     for (; keyBucketHead != null; keyBucketHead = keyBucketHead.getNextInKeyBucket()) {
       checkNoConflict(!key.equals(keyBucketHead.getKey()), "key", entry, keyBucketHead);

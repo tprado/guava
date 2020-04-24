@@ -42,6 +42,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Consumer;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * An implementation of {@code ListMultimap} that supports deterministic iteration order for both
@@ -312,7 +313,7 @@ public class LinkedListMultimap<K, V> extends AbstractMultimap<K, V>
     @Nullable Node<K, V> previous;
     int expectedModCount = modCount;
 
-    NodeIterator(int index) {
+    NodeIterator(@Mutable int index) {
       int size = size();
       checkPositionIndex(index, size);
       if (index >= (size / 2)) {
@@ -475,7 +476,7 @@ public class LinkedListMultimap<K, V> extends AbstractMultimap<K, V>
      *
      * @throws IndexOutOfBoundsException if index is invalid
      */
-    public ValueForKeyIterator(@Nullable Object key, int index) {
+    public ValueForKeyIterator(@Nullable Object key, @Mutable int index) {
       KeyList<K, V> keyList = keyToKeyList.get(key);
       int size = (keyList == null) ? 0 : keyList.count;
       checkPositionIndex(index, size);

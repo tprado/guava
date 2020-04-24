@@ -30,6 +30,8 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.Ints;
+import ristretto.Mutable;
+
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
@@ -224,7 +226,7 @@ public final class IntMath {
    * @throws IllegalArgumentException if {@code k < 0}
    */
   @GwtIncompatible // failing tests
-  public static int pow(int b, int k) {
+  public static int pow(@Mutable int b, @Mutable int k) {
     checkNonNegative("exponent", k);
     switch (b) {
       case 0:
@@ -401,7 +403,7 @@ public final class IntMath {
    *
    * @throws IllegalArgumentException if {@code a < 0} or {@code b < 0}
    */
-  public static int gcd(int a, int b) {
+  public static int gcd(@Mutable int a, @Mutable int b) {
     /*
      * The reason we require both arguments to be >= 0 is because otherwise, what do you return on
      * gcd(0, Integer.MIN_VALUE)? BigInteger.gcd would return positive 2^31, but positive 2^31 isn't
@@ -487,7 +489,7 @@ public final class IntMath {
    * @throws ArithmeticException if {@code b} to the {@code k}th power overflows in signed {@code
    *     int} arithmetic
    */
-  public static int checkedPow(int b, int k) {
+  public static int checkedPow(@Mutable int b, @Mutable int k) {
     checkNonNegative("exponent", k);
     switch (b) {
       case 0:
@@ -565,7 +567,7 @@ public final class IntMath {
    * @since 20.0
    */
   @Beta
-  public static int saturatedPow(int b, int k) {
+  public static int saturatedPow(@Mutable int b, @Mutable int k) {
     checkNonNegative("exponent", k);
     switch (b) {
       case 0:
@@ -646,7 +648,7 @@ public final class IntMath {
    *
    * @throws IllegalArgumentException if {@code n < 0}, {@code k < 0} or {@code k > n}
    */
-  public static int binomial(int n, int k) {
+  public static int binomial(int n, @Mutable int k) {
     checkNonNegative("n", n);
     checkNonNegative("k", k);
     checkArgument(k <= n, "k (%s) > n (%s)", k, n);

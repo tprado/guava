@@ -20,6 +20,7 @@ import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import java.util.Map;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A {@link UnicodeEscaper} that uses an array to quickly look up replacement characters for a given
@@ -94,8 +95,8 @@ public abstract class ArrayBasedUnicodeEscaper extends UnicodeEscaper {
    */
   protected ArrayBasedUnicodeEscaper(
       ArrayBasedEscaperMap escaperMap,
-      int safeMin,
-      int safeMax,
+      @Mutable int safeMin,
+      @Mutable int safeMax,
       @Nullable String unsafeReplacement) {
     checkNotNull(escaperMap); // GWT specific check (do not optimize)
     this.replacements = escaperMap.getReplacementArray();
@@ -174,7 +175,7 @@ public abstract class ArrayBasedUnicodeEscaper extends UnicodeEscaper {
 
   /* Overridden for performance. */
   @Override
-  protected final int nextEscapeIndex(CharSequence csq, int index, int end) {
+  protected final int nextEscapeIndex(CharSequence csq, @Mutable int index, int end) {
     while (index < end) {
       char c = csq.charAt(index);
       if ((c < replacementsLength && replacements[c] != null)

@@ -42,6 +42,7 @@ import java.util.concurrent.locks.LockSupport;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * An abstract implementation of {@link ListenableFuture}, intended for advanced users only. More
@@ -932,7 +933,7 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
   }
 
   /** Unblocks all threads and runs all listeners. */
-  private static void complete(AbstractFuture<?> future) {
+  private static void complete(@Mutable AbstractFuture<?> future) {
     Listener next = null;
     outer:
     while (true) {

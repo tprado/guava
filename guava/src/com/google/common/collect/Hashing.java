@@ -19,6 +19,7 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.primitives.Ints;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Static methods for implementing hash-based collections.
@@ -56,7 +57,7 @@ final class Hashing {
 
   private static final int MAX_TABLE_SIZE = Ints.MAX_POWER_OF_TWO;
 
-  static int closedTableSize(int expectedEntries, double loadFactor) {
+  static int closedTableSize(@Mutable int expectedEntries, double loadFactor) {
     // Get the recommended table size.
     // Round down to the nearest power of 2.
     expectedEntries = Math.max(expectedEntries, 2);

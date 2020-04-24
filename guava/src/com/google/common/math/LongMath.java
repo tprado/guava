@@ -30,6 +30,8 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.UnsignedLongs;
+import ristretto.Mutable;
+
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
@@ -265,7 +267,7 @@ public final class LongMath {
    * @throws IllegalArgumentException if {@code k < 0}
    */
   @GwtIncompatible // TODO
-  public static long pow(long b, int k) {
+  public static long pow(@Mutable long b, @Mutable int k) {
     checkNonNegative("exponent", k);
     if (-2 <= b && b <= 2) {
       switch ((int) b) {
@@ -491,7 +493,7 @@ public final class LongMath {
    *
    * @throws IllegalArgumentException if {@code a < 0} or {@code b < 0}
    */
-  public static long gcd(long a, long b) {
+  public static long gcd(@Mutable long a, @Mutable long b) {
     /*
      * The reason we require both arguments to be >= 0 is because otherwise, what do you return on
      * gcd(0, Long.MIN_VALUE)? BigInteger.gcd would return positive 2^63, but positive 2^63 isn't an
@@ -599,7 +601,7 @@ public final class LongMath {
    *     long} arithmetic
    */
   @GwtIncompatible // TODO
-  public static long checkedPow(long b, int k) {
+  public static long checkedPow(@Mutable long b, @Mutable int k) {
     checkNonNegative("exponent", k);
     if (b >= -2 & b <= 2) {
       switch ((int) b) {
@@ -713,7 +715,7 @@ public final class LongMath {
    * @since 20.0
    */
   @Beta
-  public static long saturatedPow(long b, int k) {
+  public static long saturatedPow(@Mutable long b, @Mutable int k) {
     checkNonNegative("exponent", k);
     if (b >= -2 & b <= 2) {
       switch ((int) b) {
@@ -805,7 +807,7 @@ public final class LongMath {
    *
    * @throws IllegalArgumentException if {@code n < 0}, {@code k < 0}, or {@code k > n}
    */
-  public static long binomial(int n, int k) {
+  public static long binomial(@Mutable int n, @Mutable int k) {
     checkNonNegative("n", n);
     checkNonNegative("k", k);
     checkArgument(k <= n, "k (%s) > n (%s)", k, n);
@@ -866,7 +868,7 @@ public final class LongMath {
   }
 
   /** Returns (x * numerator / denominator), which is assumed to come out to an integral value. */
-  static long multiplyFraction(long x, long numerator, long denominator) {
+  static long multiplyFraction(@Mutable long x, long numerator, @Mutable long denominator) {
     if (x == 1) {
       return numerator / denominator;
     }
@@ -1090,7 +1092,7 @@ public final class LongMath {
       }
 
       /** Returns (a * 2^32) mod m. a may be any unsigned long. */
-      private long times2ToThe32Mod(long a, long m) {
+      private long times2ToThe32Mod(@Mutable long a, long m) {
         int remainingPowersOf2 = 32;
         do {
           int shift = Math.min(remainingPowersOf2, Long.numberOfLeadingZeros(a));
@@ -1165,7 +1167,7 @@ public final class LongMath {
     abstract long squareMod(long a, long m);
 
     /** Returns a^p mod m. */
-    private long powMod(long a, long p, long m) {
+    private long powMod(@Mutable long a, @Mutable long p, long m) {
       long res = 1;
       for (; p != 0; p >>= 1) {
         if ((p & 1) != 0) {
@@ -1177,7 +1179,7 @@ public final class LongMath {
     }
 
     /** Returns true if n is a strong probable prime relative to the specified base. */
-    private boolean testWitness(long base, long n) {
+    private boolean testWitness(@Mutable long base, long n) {
       int r = Long.numberOfTrailingZeros(n - 1);
       long d = (n - 1) >> r;
       base %= n;

@@ -21,6 +21,8 @@ import static com.google.common.base.Preconditions.checkPositionIndex;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
+import ristretto.Mutable;
+
 import java.util.Arrays;
 import java.util.BitSet;
 
@@ -884,7 +886,7 @@ public abstract class CharMatcher implements Predicate<Character> {
       int end,
       char replacement,
       StringBuilder builder,
-      boolean inMatchingGroup) {
+      @Mutable boolean inMatchingGroup) {
     for (int i = start; i < end; i++) {
       char c = sequence.charAt(i);
       if (matches(c)) {
@@ -923,7 +925,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * Returns the Java Unicode escape sequence for the given {@code char}, in the form "\u12AB" where
    * "12AB" is the four hexadecimal digits representing the 16-bit code unit.
    */
-  private static String showCharacter(char c) {
+  private static String showCharacter(@Mutable char c) {
     String hex = "0123456789ABCDEF";
     char[] tmp = {'\\', 'u', '\0', '\0', '\0', '\0'};
     for (int i = 0; i < 4; i++) {
@@ -983,7 +985,7 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     private final BitSet table;
 
-    private BitSetMatcher(BitSet table, String description) {
+    private BitSetMatcher(@Mutable BitSet table, String description) {
       super(description);
       if (table.length() + Long.SIZE < table.size()) {
         table = (BitSet) table.clone();

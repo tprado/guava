@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import ristretto.Mutable;
 
 /**
  * An object that converts literal text into a format safe for inclusion in a particular context
@@ -93,7 +94,7 @@ public abstract class CharEscaper extends Escaper {
    * @return the escaped form of {@code string}
    * @throws NullPointerException if {@code string} is null
    */
-  protected final String escapeSlow(String s, int index) {
+  protected final String escapeSlow(String s, @Mutable int index) {
     int slen = s.length();
 
     // Get a destination buffer and setup some loop variables.

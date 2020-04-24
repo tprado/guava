@@ -25,6 +25,7 @@ import com.google.common.primitives.UnsignedInts;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.Serializable;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * An immutable hash code of arbitrary bit length.
@@ -83,7 +84,7 @@ public abstract class HashCode {
    * @throws IndexOutOfBoundsException if there is not enough room in {@code dest}
    */
   @CanIgnoreReturnValue
-  public int writeBytesTo(byte[] dest, int offset, int maxLength) {
+  public int writeBytesTo(byte[] dest, int offset, @Mutable int maxLength) {
     maxLength = Ints.min(maxLength, bits() / 8);
     Preconditions.checkPositionIndexes(offset, offset + maxLength, dest.length);
     writeBytesToImpl(dest, offset, maxLength);

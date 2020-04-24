@@ -25,6 +25,7 @@ import java.util.EnumMap;
 import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Implementation of {@link ImmutableMap} backed by a non-empty {@link java.util.EnumMap}.
@@ -79,7 +80,7 @@ final class ImmutableEnumMap<K extends Enum<K>, V> extends IteratorBasedImmutabl
   }
 
   @Override
-  public boolean equals(Object object) {
+  public boolean equals(@Mutable Object object) {
     if (object == this) {
       return true;
     }

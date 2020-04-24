@@ -40,6 +40,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * See MurmurHash3_x86_32 in <a
@@ -231,14 +232,14 @@ final class Murmur3_32HashFunction extends AbstractHashFunction implements Seria
     return Ints.fromBytes(input[offset + 3], input[offset + 2], input[offset + 1], input[offset]);
   }
 
-  private static int mixK1(int k1) {
+  private static int mixK1(@Mutable int k1) {
     k1 *= C1;
     k1 = Integer.rotateLeft(k1, 15);
     k1 *= C2;
     return k1;
   }
 
-  private static int mixH1(int h1, int k1) {
+  private static int mixH1(@Mutable int h1, int k1) {
     h1 ^= k1;
     h1 = Integer.rotateLeft(h1, 13);
     h1 = h1 * 5 + 0xe6546b64;
@@ -246,7 +247,7 @@ final class Murmur3_32HashFunction extends AbstractHashFunction implements Seria
   }
 
   // Finalization mix - force all bits of a hash block to avalanche
-  private static HashCode fmix(int h1, int length) {
+  private static HashCode fmix(@Mutable int h1, int length) {
     h1 ^= length;
     h1 ^= h1 >>> 16;
     h1 *= 0x85ebca6b;

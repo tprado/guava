@@ -14,6 +14,7 @@ package com.google.common.hash;
 import com.google.common.annotations.GwtIncompatible;
 import java.util.Random;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A package-local class holding common representation and mechanics for classes supporting dynamic
@@ -177,7 +178,7 @@ abstract class Striped64 extends Number {
    * @param hc the hash code holder
    * @param wasUncontended false if CAS failed before call
    */
-  final void retryUpdate(long x, int @Nullable [] hc, boolean wasUncontended) {
+  final void retryUpdate(long x, @Mutable int @Nullable [] hc, @Mutable boolean wasUncontended) {
     int h;
     if (hc == null) {
       threadHashCode.set(hc = new int[1]); // Initialize randomly

@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.RandomAccess;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Static methods pertaining to sorted {@link List} instances.
@@ -245,7 +246,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
    *     otherwise the index determined by the {@code KeyAbsentBehavior}.
    */
   public static <E> int binarySearch(
-      List<? extends E> list,
+      @Mutable List<? extends E> list,
       @Nullable E key,
       Comparator<? super E> comparator,
       KeyPresentBehavior presentBehavior,

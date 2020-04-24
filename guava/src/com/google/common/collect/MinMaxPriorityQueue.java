@@ -42,6 +42,7 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A double-ended priority queue, which provides constant-time access to both its least element and
@@ -545,7 +546,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     }
 
     /** Bubbles a value from {@code index} up the appropriate heap if required. */
-    void bubbleUp(int index, E x) {
+    void bubbleUp(@Mutable int index, E x) {
       int crossOver = crossOverUp(index, x);
 
       Heap heap;
@@ -563,7 +564,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
      * element ended up at.
      */
     @CanIgnoreReturnValue
-    int bubbleUpAlternatingLevels(int index, E x) {
+    int bubbleUpAlternatingLevels(@Mutable int index, E x) {
       while (index > 2) {
         int grandParentIndex = getGrandparentIndex(index);
         E e = elementData(grandParentIndex);
@@ -696,7 +697,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
      * @return the position of the new hole (where the lowest grandchild moved from, that had no
      *     grandchild to replace it)
      */
-    int fillHoleAt(int index) {
+    int fillHoleAt(@Mutable int index) {
       int minGrandchildIndex;
       while ((minGrandchildIndex = findMinGrandChild(index)) > 0) {
         queue[index] = elementData(minGrandchildIndex);
@@ -843,7 +844,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
      * Advances nextCursor to the index of the first element after {@code c} that is not in {@code
      * skipMe} and returns {@code size()} if there is no such element.
      */
-    private void nextNotInSkipMe(int c) {
+    private void nextNotInSkipMe(@Mutable int c) {
       if (nextCursor < c) {
         if (skipMe != null) {
           while (c < size() && foundAndRemovedExactReference(skipMe, elementData(c))) {

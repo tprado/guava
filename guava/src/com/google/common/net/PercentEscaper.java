@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.escape.UnicodeEscaper;
+import ristretto.Mutable;
 
 /**
  * A {@code UnicodeEscaper} that escapes some set of Java characters using a UTF-8 based percent
@@ -82,7 +83,7 @@ public final class PercentEscaper extends UnicodeEscaper {
    * @param plusForSpace true if ASCII space should be escaped to {@code +} rather than {@code %20}
    * @throws IllegalArgumentException if any of the parameters were invalid
    */
-  public PercentEscaper(String safeChars, boolean plusForSpace) {
+  public PercentEscaper(@Mutable String safeChars, boolean plusForSpace) {
     // TODO(dbeaumont): Switch to static factory methods for creation now that class is final.
     // TODO(dbeaumont): Support escapers where alphanumeric chars are not safe.
     checkNotNull(safeChars); // eager for GWT.
@@ -125,7 +126,7 @@ public final class PercentEscaper extends UnicodeEscaper {
    * escaper from ~760ns to ~400ns as measured by {@link CharEscapersBenchmark}.
    */
   @Override
-  protected int nextEscapeIndex(CharSequence csq, int index, int end) {
+  protected int nextEscapeIndex(CharSequence csq, @Mutable int index, int end) {
     checkNotNull(csq);
     for (; index < end; index++) {
       char c = csq.charAt(index);
@@ -155,7 +156,7 @@ public final class PercentEscaper extends UnicodeEscaper {
 
   /** Escapes the given Unicode code point in UTF-8. */
   @Override
-  protected char[] escape(int cp) {
+  protected char[] escape(@Mutable int cp) {
     // We should never get negative values here but if we do it will throw an
     // IndexOutOfBoundsException, so at least it will get spotted.
     if (cp < safeOctets.length && safeOctets[cp]) {

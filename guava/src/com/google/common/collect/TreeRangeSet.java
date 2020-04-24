@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * An implementation of {@link RangeSet} backed by a {@link TreeMap}.
@@ -464,7 +465,7 @@ public class TreeRangeSet<C extends Comparable<?>> extends AbstractRangeSet<C>
       this.complementLowerBoundWindow = window;
     }
 
-    private NavigableMap<Cut<C>, Range<C>> subMap(Range<Cut<C>> subWindow) {
+    private NavigableMap<Cut<C>, Range<C>> subMap(@Mutable Range<Cut<C>> subWindow) {
       if (!complementLowerBoundWindow.isConnected(subWindow)) {
         return ImmutableSortedMap.of();
       } else {

@@ -20,6 +20,7 @@ import static com.google.common.hash.LittleEndianByteArray.load64;
 import static java.lang.Long.rotateRight;
 
 import com.google.common.annotations.VisibleForTesting;
+import ristretto.Mutable;
 
 /**
  * Implementation of FarmHash Fingerprint64, an open-source fingerprinting algorithm for strings.
@@ -98,7 +99,7 @@ final class FarmHashFingerprint64 extends AbstractNonStreamingHashFunction {
    * new arrays every time.
    */
   private static void weakHashLength32WithSeeds(
-      byte[] bytes, int offset, long seedA, long seedB, long[] output) {
+      byte[] bytes, int offset, @Mutable long seedA, @Mutable long seedB, long[] output) {
     long part1 = load64(bytes, offset);
     long part2 = load64(bytes, offset + 8);
     long part3 = load64(bytes, offset + 16);
@@ -168,7 +169,7 @@ final class FarmHashFingerprint64 extends AbstractNonStreamingHashFunction {
   /*
    * Compute an 8-byte hash of a byte array of length greater than 64 bytes.
    */
-  private static long hashLength65Plus(byte[] bytes, int offset, int length) {
+  private static long hashLength65Plus(byte[] bytes, @Mutable int offset, int length) {
     final int seed = 81;
     // For strings over 64 bytes we loop. Internal state consists of 56 bytes: v, w, x, y, and z.
     long x = seed;

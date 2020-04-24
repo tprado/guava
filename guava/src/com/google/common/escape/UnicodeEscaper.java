@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import ristretto.Mutable;
 
 /**
  * An {@link Escaper} that converts literal text into a format safe for inclusion in a particular
@@ -154,7 +155,7 @@ public abstract class UnicodeEscaper extends Escaper {
    * @throws NullPointerException if {@code string} is null
    * @throws IllegalArgumentException if invalid surrogate characters are encountered
    */
-  protected final String escapeSlow(String s, int index) {
+  protected final String escapeSlow(String s, @Mutable int index) {
     int end = s.length();
 
     // Get a destination buffer and setup some loop variables.
@@ -242,7 +243,7 @@ public abstract class UnicodeEscaper extends Escaper {
    * @return the Unicode code point for the given index or the negated value of the trailing high
    *     surrogate character at the end of the sequence
    */
-  protected static int codePointAt(CharSequence seq, int index, int end) {
+  protected static int codePointAt(CharSequence seq, @Mutable int index, int end) {
     checkNotNull(seq);
     if (index < end) {
       char c1 = seq.charAt(index++);

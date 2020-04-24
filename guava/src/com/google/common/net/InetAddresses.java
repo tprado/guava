@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Static utility methods pertaining to {@link InetAddress} instances.
@@ -161,7 +162,7 @@ public final class InetAddresses {
   }
 
   /** Returns {@code null} if unable to parse into a {@code byte[]}. */
-  private static byte @Nullable [] ipStringToBytes(String ipString) {
+  private static byte @Nullable [] ipStringToBytes(@Mutable String ipString) {
     // Make a first pass to categorize the characters in this string.
     boolean hasColon = false;
     boolean hasDot = false;

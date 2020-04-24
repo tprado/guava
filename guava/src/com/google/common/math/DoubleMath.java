@@ -35,6 +35,8 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.Booleans;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import ristretto.Mutable;
+
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Iterator;
@@ -180,7 +182,7 @@ public final class DoubleMath {
    */
   // #roundIntermediate, java.lang.Math.getExponent, com.google.common.math.DoubleUtils
   @GwtIncompatible
-  public static BigInteger roundToBigInteger(double x, RoundingMode mode) {
+  public static BigInteger roundToBigInteger(@Mutable double x, RoundingMode mode) {
     x = roundIntermediate(x, mode);
     if (MIN_LONG_AS_DOUBLE - x < 1.0 & x < MAX_LONG_AS_DOUBLE_PLUS_ONE) {
       return BigInteger.valueOf((long) x);

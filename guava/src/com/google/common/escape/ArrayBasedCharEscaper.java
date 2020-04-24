@@ -18,6 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import ristretto.Mutable;
+
 import java.util.Map;
 
 /**
@@ -82,7 +84,7 @@ public abstract class ArrayBasedCharEscaper extends CharEscaper {
    * @param safeMin the lowest character value in the safe range
    * @param safeMax the highest character value in the safe range
    */
-  protected ArrayBasedCharEscaper(ArrayBasedEscaperMap escaperMap, char safeMin, char safeMax) {
+  protected ArrayBasedCharEscaper(ArrayBasedEscaperMap escaperMap, @Mutable char safeMin, @Mutable char safeMax) {
 
     checkNotNull(escaperMap); // GWT specific check (do not optimize)
     this.replacements = escaperMap.getReplacementArray();

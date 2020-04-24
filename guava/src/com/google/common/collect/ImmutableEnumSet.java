@@ -18,6 +18,8 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.concurrent.LazyInit;
+import ristretto.Mutable;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -89,7 +91,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   }
 
   @Override
-  public boolean containsAll(Collection<?> collection) {
+  public boolean containsAll(@Mutable Collection<?> collection) {
     if (collection instanceof ImmutableEnumSet<?>) {
       collection = ((ImmutableEnumSet<?>) collection).delegate;
     }
@@ -102,7 +104,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   }
 
   @Override
-  public boolean equals(Object object) {
+  public boolean equals(@Mutable Object object) {
     if (object == this) {
       return true;
     }

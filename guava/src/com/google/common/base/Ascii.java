@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
+import ristretto.Mutable;
 
 /**
  * Static methods pertaining to ASCII characters (those in the range of values {@code 0x00} through
@@ -547,7 +548,7 @@ public final class Ascii {
    *     truncationIndicator}
    * @since 16.0
    */
-  public static String truncate(CharSequence seq, int maxLength, String truncationIndicator) {
+  public static String truncate(@Mutable CharSequence seq, int maxLength, String truncationIndicator) {
     checkNotNull(seq);
 
     // length to truncate the sequence to, not including the truncation indicator

@@ -29,6 +29,7 @@ import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Provides utility methods for working with character streams.
@@ -258,7 +259,7 @@ public final class CharStreams {
    * @throws IOException if an I/O error occurs
    */
   @Beta
-  public static void skipFully(Reader reader, long n) throws IOException {
+  public static void skipFully(Reader reader, @Mutable long n) throws IOException {
     checkNotNull(reader);
     while (n > 0) {
       long amt = reader.skip(n);

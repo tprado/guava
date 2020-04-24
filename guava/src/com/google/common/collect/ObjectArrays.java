@@ -25,6 +25,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Static utility methods pertaining to object arrays.
@@ -124,7 +125,7 @@ public final class ObjectArrays {
    * @throws ArrayStoreException if the runtime type of the specified array is not a supertype of
    *     the runtime type of every element in the specified collection
    */
-  static <T> T[] toArrayImpl(Collection<?> c, T[] array) {
+  static <T> T[] toArrayImpl(Collection<?> c, @Mutable T[] array) {
     int size = c.size();
     if (array.length < size) {
       array = newArray(array, size);
@@ -147,7 +148,7 @@ public final class ObjectArrays {
    * collection is set to {@code null}. This is useful in determining the length of the collection
    * <i>only</i> if the caller knows that the collection does not contain any null elements.
    */
-  static <T> T[] toArrayImpl(Object[] src, int offset, int len, T[] dst) {
+  static <T> T[] toArrayImpl(Object[] src, int offset, int len, @Mutable T[] dst) {
     checkPositionIndexes(offset, offset + len, src.length);
     if (dst.length < len) {
       dst = newArray(dst, len);

@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Thread that finalizes referents. All references should implement {@code
@@ -157,7 +158,7 @@ public class Finalizer implements Runnable {
    * @return true if the caller should continue, false if the associated FinalizableReferenceQueue
    *     is no longer referenced.
    */
-  private boolean cleanUp(Reference<?> reference) {
+  private boolean cleanUp(@Mutable Reference<?> reference) {
     Method finalizeReferentMethod = getFinalizeReferentMethod();
     if (finalizeReferentMethod == null) {
       return false;

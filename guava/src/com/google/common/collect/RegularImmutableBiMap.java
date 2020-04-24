@@ -32,6 +32,7 @@ import java.io.Serializable;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Bimap with zero or more mappings.
@@ -124,7 +125,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
    */
   @CanIgnoreReturnValue
   private static int checkNoConflictInValueBucket(
-      Object value, Entry<?, ?> entry, @Nullable ImmutableMapEntry<?, ?> valueBucketHead) {
+      Object value, Entry<?, ?> entry, @Mutable @Nullable ImmutableMapEntry<?, ?> valueBucketHead) {
     int bucketSize = 0;
     for (; valueBucketHead != null; valueBucketHead = valueBucketHead.getNextInValueBucket()) {
       checkNoConflict(!value.equals(valueBucketHead.getValue()), "value", entry, valueBucketHead);

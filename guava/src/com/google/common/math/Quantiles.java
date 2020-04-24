@@ -25,6 +25,8 @@ import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
+import ristretto.Mutable;
+
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -526,7 +528,7 @@ public final class Quantiles {
    * ({@code required}, {@code to}] are greater than or equal to that value. Therefore, the value at
    * {@code required} is the value which would appear at that index in the sorted dataset.
    */
-  private static void selectInPlace(int required, double[] array, int from, int to) {
+  private static void selectInPlace(int required, double[] array, @Mutable int from, @Mutable int to) {
     // If we are looking for the least element in the range, we can just do a linear search for it.
     // (We will hit this whenever we are doing quantile interpolation: our first selection finds
     // the lower value, our second one finds the upper value by looking for the next least element.)

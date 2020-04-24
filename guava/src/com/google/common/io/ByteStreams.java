@@ -23,6 +23,8 @@ import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.math.IntMath;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import ristretto.Mutable;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
@@ -165,7 +167,7 @@ public final class ByteStreams {
    * a total combined length of {@code totalLen} bytes) followed by all bytes remaining in the given
    * input stream.
    */
-  private static byte[] toByteArrayInternal(InputStream in, Deque<byte[]> bufs, int totalLen)
+  private static byte[] toByteArrayInternal(InputStream in, Deque<byte[]> bufs, @Mutable int totalLen)
       throws IOException {
     // Starting with an 8k buffer, double the size of each sucessive buffer. Buffers are retained
     // in a deque so that there's no copying between buffers while reading and so all of the bytes
@@ -722,7 +724,7 @@ public final class ByteStreams {
     }
 
     @Override
-    public int read(byte[] b, int off, int len) throws IOException {
+    public int read(byte[] b, int off, @Mutable int len) throws IOException {
       if (left == 0) {
         return -1;
       }
@@ -749,7 +751,7 @@ public final class ByteStreams {
     }
 
     @Override
-    public long skip(long n) throws IOException {
+    public long skip(@Mutable long n) throws IOException {
       n = Math.min(n, left);
       long skipped = in.skip(n);
       left -= skipped;

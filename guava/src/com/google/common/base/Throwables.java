@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Static utility methods pertaining to instances of {@link Throwable}.
@@ -251,7 +252,7 @@ public final class Throwables {
    *
    * @throws IllegalArgumentException if there is a loop in the causal chain
    */
-  public static Throwable getRootCause(Throwable throwable) {
+  public static Throwable getRootCause(@Mutable Throwable throwable) {
     // Keep a second pointer that slowly walks the causal chain. If the fast pointer ever catches
     // the slower pointer, then there's a loop.
     Throwable slowPointer = throwable;
@@ -289,7 +290,7 @@ public final class Throwables {
    * @throws IllegalArgumentException if there is a loop in the causal chain
    */
   @Beta // TODO(kevinb): decide best return type
-  public static List<Throwable> getCausalChain(Throwable throwable) {
+  public static List<Throwable> getCausalChain(@Mutable Throwable throwable) {
     checkNotNull(throwable);
     List<Throwable> causes = new ArrayList<>(4);
     causes.add(throwable);

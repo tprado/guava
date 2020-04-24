@@ -41,6 +41,7 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A {@link Set} whose contents will never change, with many other important properties detailed at
@@ -638,7 +639,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * can hold setSize elements with the desired load factor. Always returns at least setSize + 2.
    */
   @VisibleForTesting
-  static int chooseTableSize(int setSize) {
+  static int chooseTableSize(@Mutable int setSize) {
     setSize = Math.max(setSize, 2);
     // Correct the size for open addressing to match desired load factor.
     if (setSize < CUTOFF) {

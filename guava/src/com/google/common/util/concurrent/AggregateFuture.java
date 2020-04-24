@@ -31,6 +31,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A future whose value is derived from a collection of input futures.
@@ -327,7 +328,7 @@ abstract class AggregateFuture<InputT, OutputT> extends AggregateFutureState<Out
   abstract void handleAllCompleted();
 
   /** Adds the chain to the seen set, and returns whether all the chain was new to us. */
-  private static boolean addCausalChain(Set<Throwable> seen, Throwable t) {
+  private static boolean addCausalChain(Set<Throwable> seen, @Mutable Throwable t) {
     for (; t != null; t = t.getCause()) {
       boolean firstTimeSeen = seen.add(t);
       if (!firstTimeSeen) {

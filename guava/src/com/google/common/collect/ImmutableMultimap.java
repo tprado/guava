@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A {@link Multimap} whose contents will never change, with many other important properties
@@ -729,7 +730,7 @@ public abstract class ImmutableMultimap<K, V> extends BaseImmutableMultimap<K, V
 
     @GwtIncompatible // not present in emulated superclass
     @Override
-    int copyIntoArray(Object[] dst, int offset) {
+    int copyIntoArray(Object[] dst, @Mutable int offset) {
       for (ImmutableCollection<V> valueCollection : multimap.map.values()) {
         offset = valueCollection.copyIntoArray(dst, offset);
       }
