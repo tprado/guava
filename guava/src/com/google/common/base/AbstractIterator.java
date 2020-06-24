@@ -21,6 +21,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Note this class is a copy of {@link com.google.common.collect.AbstractIterator} (for dependency
@@ -28,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 abstract class AbstractIterator<T> implements Iterator<T> {
-  private State state = State.NOT_READY;
+  @Mutable private State state = State.NOT_READY;
 
   protected AbstractIterator() {}
 
@@ -39,7 +40,7 @@ abstract class AbstractIterator<T> implements Iterator<T> {
     FAILED,
   }
 
-  private @Nullable T next;
+  @Mutable private @Nullable T next;
 
   protected abstract T computeNext();
 

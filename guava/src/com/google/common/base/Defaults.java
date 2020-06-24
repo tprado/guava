@@ -29,8 +29,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class Defaults {
   private Defaults() {}
 
-  private static final Double DOUBLE_DEFAULT = Double.valueOf(0d);
-  private static final Float FLOAT_DEFAULT = Float.valueOf(0f);
+  private static Double DOUBLE_DEFAULT = Double.valueOf(0d);
+  private static Float FLOAT_DEFAULT = Float.valueOf(0f);
 
   /**
    * Returns the default value of {@code type} as defined by JLS --- {@code 0} for numbers, {@code

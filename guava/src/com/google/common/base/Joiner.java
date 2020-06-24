@@ -74,7 +74,7 @@ public class Joiner {
     return new Joiner(String.valueOf(separator));
   }
 
-  private final String separator;
+  private String separator;
 
   private Joiner(String separator) {
     this.separator = checkNotNull(separator);
@@ -215,7 +215,7 @@ public class Joiner {
    * Returns a joiner with the same behavior as this one, except automatically substituting {@code
    * nullText} for any provided null elements.
    */
-  public Joiner useForNull(final String nullText) {
+  public Joiner useForNull(String nullText) {
     checkNotNull(nullText);
     return new Joiner(this) {
       @Override
@@ -311,8 +311,8 @@ public class Joiner {
    * @since 2.0
    */
   public static final class MapJoiner {
-    private final Joiner joiner;
-    private final String keyValueSeparator;
+    private Joiner joiner;
+    private String keyValueSeparator;
 
     private MapJoiner(Joiner joiner, String keyValueSeparator) {
       this.joiner = joiner; // only "this" is ever passed, so don't checkNotNull
@@ -454,7 +454,7 @@ public class Joiner {
   }
 
   private static Iterable<Object> iterable(
-      final Object first, final Object second, final Object[] rest) {
+      Object first, Object second, Object[] rest) {
     checkNotNull(rest);
     return new AbstractList<Object>() {
       @Override

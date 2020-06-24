@@ -23,6 +23,7 @@ import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.io.Serializable;
 import java.util.Iterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * A function from {@code A} to {@code B} with an associated <i>reverse</i> function from {@code B}
@@ -114,10 +115,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 public abstract class Converter<A, B> implements Function<A, B> {
-  private final boolean handleNullAutomatically;
+  boolean handleNullAutomatically;
 
   // We lazily cache the reverse view to avoid allocating on every call to reverse().
-  @LazyInit private transient @Nullable Converter<B, A> reverse;
+  @Mutable @LazyInit transient @Nullable Converter<B, A> reverse;
 
   /** Constructor for use by subclasses. */
   protected Converter() {
@@ -197,13 +198,13 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * element.
    */
   @CanIgnoreReturnValue
-  public Iterable<B> convertAll(final Iterable<? extends A> fromIterable) {
+  public Iterable<B> convertAll(Iterable<? extends A> fromIterable) {
     checkNotNull(fromIterable, "fromIterable");
     return new Iterable<B>() {
       @Override
       public Iterator<B> iterator() {
         return new Iterator<B>() {
-          private final Iterator<? extends A> fromIterator = fromIterable.iterator();
+          Iterator<? extends A> fromIterator = fromIterable.iterator();
 
           @Override
           public boolean hasNext() {
@@ -240,7 +241,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
 
   private static final class ReverseConverter<A, B> extends Converter<B, A>
       implements Serializable {
-    final Converter<A, B> original;
+    Converter<A, B> original;
 
     ReverseConverter(Converter<A, B> original) {
       this.original = original;
@@ -299,7 +300,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
       return original + ".reverse()";
     }
 
-    private static final long serialVersionUID = 0L;
+    static long serialVersionUID = 0L;
   }
 
   /**
@@ -320,8 +321,8 @@ public abstract class Converter<A, B> implements Function<A, B> {
 
   private static final class ConverterComposition<A, B, C> extends Converter<A, C>
       implements Serializable {
-    final Converter<A, B> first;
-    final Converter<B, C> second;
+    Converter<A, B> first;
+    Converter<B, C> second;
 
     ConverterComposition(Converter<A, B> first, Converter<B, C> second) {
       this.first = first;
@@ -376,7 +377,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
       return first + ".andThen(" + second + ")";
     }
 
-    private static final long serialVersionUID = 0L;
+    static long serialVersionUID = 0L;
   }
 
   /**
@@ -429,8 +430,8 @@ public abstract class Converter<A, B> implements Function<A, B> {
 
   private static final class FunctionBasedConverter<A, B> extends Converter<A, B>
       implements Serializable {
-    private final Function<? super A, ? extends B> forwardFunction;
-    private final Function<? super B, ? extends A> backwardFunction;
+    Function<? super A, ? extends B> forwardFunction;
+    Function<? super B, ? extends A> backwardFunction;
 
     private FunctionBasedConverter(
         Function<? super A, ? extends B> forwardFunction,
@@ -481,7 +482,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * "pass-through type".
    */
   private static final class IdentityConverter<T> extends Converter<T, T> implements Serializable {
-    static final IdentityConverter<?> INSTANCE = new IdentityConverter<>();
+    static IdentityConverter<?> INSTANCE = new IdentityConverter<>();
 
     @Override
     protected T doForward(T t) {
@@ -517,6 +518,6 @@ public abstract class Converter<A, B> implements Function<A, B> {
       return INSTANCE;
     }
 
-    private static final long serialVersionUID = 0L;
+    static long serialVersionUID = 0L;
   }
 }

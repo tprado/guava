@@ -20,6 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import ristretto.Mutable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -100,10 +102,10 @@ import java.util.stream.StreamSupport;
  */
 @GwtCompatible(emulated = true)
 public final class Splitter {
-  private final CharMatcher trimmer;
-  private final boolean omitEmptyStrings;
-  private final Strategy strategy;
-  private final int limit;
+  private CharMatcher trimmer;
+  private boolean omitEmptyStrings;
+  private Strategy strategy;
+  private int limit;
 
   private Splitter(Strategy strategy) {
     this(strategy, false, CharMatcher.none(), Integer.MAX_VALUE);
@@ -137,13 +139,13 @@ public final class Splitter {
    *     separator
    * @return a splitter, with default settings, that uses this matcher
    */
-  public static Splitter on(final CharMatcher separatorMatcher) {
+  public static Splitter on(CharMatcher separatorMatcher) {
     checkNotNull(separatorMatcher);
 
     return new Splitter(
         new Strategy() {
           @Override
-          public SplittingIterator iterator(Splitter splitter, final CharSequence toSplit) {
+          public SplittingIterator iterator(Splitter splitter, CharSequence toSplit) {
             return new SplittingIterator(splitter, toSplit) {
               @Override
               int separatorStart(int start) {
@@ -167,7 +169,7 @@ public final class Splitter {
    * @param separator the literal, nonempty string to recognize as a separator
    * @return a splitter, with default settings, that recognizes that separator
    */
-  public static Splitter on(final String separator) {
+  public static Splitter on(String separator) {
     checkArgument(separator.length() != 0, "The separator may not be the empty string.");
     if (separator.length() == 1) {
       return Splitter.on(separator.charAt(0));
@@ -217,7 +219,7 @@ public final class Splitter {
     return on(new JdkPattern(separatorPattern));
   }
 
-  private static Splitter on(final CommonPattern separatorPattern) {
+  private static Splitter on(CommonPattern separatorPattern) {
     checkArgument(
         !separatorPattern.matcher("").matches(),
         "The pattern may not match the empty string: %s",
@@ -226,8 +228,8 @@ public final class Splitter {
     return new Splitter(
         new Strategy() {
           @Override
-          public SplittingIterator iterator(final Splitter splitter, CharSequence toSplit) {
-            final CommonMatcher matcher = separatorPattern.matcher(toSplit);
+          public SplittingIterator iterator(Splitter splitter, CharSequence toSplit) {
+            CommonMatcher matcher = separatorPattern.matcher(toSplit);
             return new SplittingIterator(splitter, toSplit) {
               @Override
               public int separatorStart(int start) {
@@ -278,13 +280,13 @@ public final class Splitter {
    * @return a splitter, with default settings, that can split into fixed sized pieces
    * @throws IllegalArgumentException if {@code length} is zero or negative
    */
-  public static Splitter fixedLength(final int length) {
+  public static Splitter fixedLength(int length) {
     checkArgument(length > 0, "The length may not be less than 1");
 
     return new Splitter(
         new Strategy() {
           @Override
-          public SplittingIterator iterator(final Splitter splitter, CharSequence toSplit) {
+          public SplittingIterator iterator(Splitter splitter, CharSequence toSplit) {
             return new SplittingIterator(splitter, toSplit) {
               @Override
               public int separatorStart(int start) {
@@ -379,7 +381,7 @@ public final class Splitter {
    * @param sequence the sequence of characters to split
    * @return an iteration over the segments split from the parameter
    */
-  public Iterable<String> split(final CharSequence sequence) {
+  public Iterable<String> split(CharSequence sequence) {
     checkNotNull(sequence);
 
     return new Iterable<String>() {
@@ -494,9 +496,9 @@ public final class Splitter {
    */
   @Beta
   public static final class MapSplitter {
-    private static final String INVALID_ENTRY_MESSAGE = "Chunk [%s] is not a valid entry";
-    private final Splitter outerSplitter;
-    private final Splitter entrySplitter;
+    private static String INVALID_ENTRY_MESSAGE = "Chunk [%s] is not a valid entry";
+    private Splitter outerSplitter;
+    private Splitter entrySplitter;
 
     private MapSplitter(Splitter outerSplitter, Splitter entrySplitter) {
       this.outerSplitter = outerSplitter; // only "this" is passed
@@ -538,9 +540,9 @@ public final class Splitter {
   }
 
   private abstract static class SplittingIterator extends AbstractIterator<String> {
-    final CharSequence toSplit;
-    final CharMatcher trimmer;
-    final boolean omitEmptyStrings;
+    CharSequence toSplit;
+    CharMatcher trimmer;
+    boolean omitEmptyStrings;
 
     /**
      * Returns the first index in {@code toSplit} at or after {@code start} that contains the
@@ -554,8 +556,8 @@ public final class Splitter {
      */
     abstract int separatorEnd(int separatorPosition);
 
-    int offset = 0;
-    int limit;
+    @Mutable int offset = 0;
+    @Mutable int limit;
 
     protected SplittingIterator(Splitter splitter, CharSequence toSplit) {
       this.trimmer = splitter.trimmer;
@@ -571,10 +573,10 @@ public final class Splitter {
        * one. nextStart is the start position of the returned substring, while offset is the place
        * to start looking for a separator.
        */
-      int nextStart = offset;
+      @Mutable int nextStart = offset;
       while (offset != -1) {
-        int start = nextStart;
-        int end;
+        @Mutable int start = nextStart;
+        @Mutable int end;
 
         int separatorPosition = separatorStart(offset);
         if (separatorPosition == -1) {

@@ -24,7 +24,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /** Implementation of an {@link Optional} containing a reference. */
 @GwtCompatible
 final class Present<T> extends Optional<T> {
-  private final T reference;
+  private T reference;
 
   Present(T reference) {
     this.reference = reference;
@@ -95,5 +95,5 @@ final class Present<T> extends Optional<T> {
     return "Optional.of(" + reference + ")";
   }
 
-  private static final long serialVersionUID = 0;
+  private static long serialVersionUID = 0;
 }

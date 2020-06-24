@@ -48,7 +48,7 @@ public final class Objects extends ExtraObjectsMethodsForWeb {
    * <p><b>Note for Java 7 and later:</b> This method should be treated as deprecated; use {@link
    * java.util.Objects#equals} instead.
    */
-  public static boolean equal(@Nullable Object a, @Nullable Object b) {
+  static boolean equal(@Nullable Object a, @Nullable Object b) {
     return a == b || (a != null && a.equals(b));
   }
 
@@ -73,7 +73,7 @@ public final class Objects extends ExtraObjectsMethodsForWeb {
    * <p><b>Note for Java 7 and later:</b> This method should be treated as deprecated; use {@link
    * java.util.Objects#hash} instead.
    */
-  public static int hashCode(@Nullable Object @Nullable ... objects) {
+  static int hashCode(@Nullable Object @Nullable ... objects) {
     return Arrays.hashCode(objects);
   }
 }

@@ -44,7 +44,7 @@ public abstract class Ticker {
     return SYSTEM_TICKER;
   }
 
-  private static final Ticker SYSTEM_TICKER =
+  private static Ticker SYSTEM_TICKER =
       new Ticker() {
         @Override
         public long read() {

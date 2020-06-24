@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 /** A regex pattern implementation which is backed by the {@link Pattern}. */
 @GwtIncompatible
 final class JdkPattern extends CommonPattern implements Serializable {
-  private final Pattern pattern;
+  private Pattern pattern;
 
   JdkPattern(Pattern pattern) {
     this.pattern = Preconditions.checkNotNull(pattern);
@@ -49,7 +49,7 @@ final class JdkPattern extends CommonPattern implements Serializable {
   }
 
   private static final class JdkMatcher extends CommonMatcher {
-    final Matcher matcher;
+    Matcher matcher;
 
     JdkMatcher(Matcher matcher) {
       this.matcher = Preconditions.checkNotNull(matcher);
@@ -86,5 +86,5 @@ final class JdkPattern extends CommonPattern implements Serializable {
     }
   }
 
-  private static final long serialVersionUID = 0;
+  private static long serialVersionUID = 0;
 }

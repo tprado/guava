@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
+import ristretto.PackagePrivate;
 
 /**
  * Static utility methods pertaining to {@code Predicate} instances.
@@ -305,7 +307,7 @@ public final class Predicates {
 
   /** @see Predicates#not(Predicate) */
   private static class NotPredicate<T> implements Predicate<T>, Serializable {
-    final Predicate<T> predicate;
+    Predicate<T> predicate;
 
     NotPredicate(Predicate<T> predicate) {
       this.predicate = checkNotNull(predicate);
@@ -335,12 +337,12 @@ public final class Predicates {
       return "Predicates.not(" + predicate + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /** @see Predicates#and(Iterable) */
   private static class AndPredicate<T> implements Predicate<T>, Serializable {
-    private final List<? extends Predicate<? super T>> components;
+    private List<? extends Predicate<? super T>> components;
 
     private AndPredicate(List<? extends Predicate<? super T>> components) {
       this.components = components;
@@ -377,12 +379,12 @@ public final class Predicates {
       return toStringHelper("and", components);
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /** @see Predicates#or(Iterable) */
   private static class OrPredicate<T> implements Predicate<T>, Serializable {
-    private final List<? extends Predicate<? super T>> components;
+    private List<? extends Predicate<? super T>> components;
 
     private OrPredicate(List<? extends Predicate<? super T>> components) {
       this.components = components;
@@ -419,12 +421,12 @@ public final class Predicates {
       return toStringHelper("or", components);
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   private static String toStringHelper(String methodName, Iterable<?> components) {
     StringBuilder builder = new StringBuilder("Predicates.").append(methodName).append('(');
-    boolean first = true;
+    @Mutable boolean first = true;
     for (Object o : components) {
       if (!first) {
         builder.append(',');
@@ -437,7 +439,7 @@ public final class Predicates {
 
   /** @see Predicates#equalTo(Object) */
   private static class IsEqualToPredicate<T> implements Predicate<T>, Serializable {
-    private final T target;
+    private T target;
 
     private IsEqualToPredicate(T target) {
       this.target = target;
@@ -467,13 +469,13 @@ public final class Predicates {
       return "Predicates.equalTo(" + target + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /** @see Predicates#instanceOf(Class) */
   @GwtIncompatible // Class.isInstance
   private static class InstanceOfPredicate implements Predicate<Object>, Serializable {
-    private final Class<?> clazz;
+    private Class<?> clazz;
 
     private InstanceOfPredicate(Class<?> clazz) {
       this.clazz = checkNotNull(clazz);
@@ -503,13 +505,13 @@ public final class Predicates {
       return "Predicates.instanceOf(" + clazz.getName() + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /** @see Predicates#subtypeOf(Class) */
   @GwtIncompatible // Class.isAssignableFrom
   private static class SubtypeOfPredicate implements Predicate<Class<?>>, Serializable {
-    private final Class<?> clazz;
+    private Class<?> clazz;
 
     private SubtypeOfPredicate(Class<?> clazz) {
       this.clazz = checkNotNull(clazz);
@@ -539,12 +541,12 @@ public final class Predicates {
       return "Predicates.subtypeOf(" + clazz.getName() + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /** @see Predicates#in(Collection) */
   private static class InPredicate<T> implements Predicate<T>, Serializable {
-    private final Collection<?> target;
+    private Collection<?> target;
 
     private InPredicate(Collection<?> target) {
       this.target = checkNotNull(target);
@@ -578,13 +580,13 @@ public final class Predicates {
       return "Predicates.in(" + target + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /** @see Predicates#compose(Predicate, Function) */
   private static class CompositionPredicate<A, B> implements Predicate<A>, Serializable {
-    final Predicate<B> p;
-    final Function<A, ? extends B> f;
+    Predicate<B> p;
+    Function<A, ? extends B> f;
 
     private CompositionPredicate(Predicate<B> p, Function<A, ? extends B> f) {
       this.p = checkNotNull(p);
@@ -616,13 +618,13 @@ public final class Predicates {
       return p + "(" + f + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /** @see Predicates#contains(Pattern) */
   @GwtIncompatible // Only used by other GWT-incompatible code.
   private static class ContainsPatternPredicate implements Predicate<CharSequence>, Serializable {
-    final CommonPattern pattern;
+    @PackagePrivate CommonPattern pattern;
 
     ContainsPatternPredicate(CommonPattern pattern) {
       this.pattern = checkNotNull(pattern);
@@ -664,7 +666,7 @@ public final class Predicates {
       return "Predicates.contains(" + patternString + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /** @see Predicates#containsPattern(String) */
@@ -680,7 +682,7 @@ public final class Predicates {
       return "Predicates.containsPattern(" + pattern.pattern() + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   private static <T> List<Predicate<? super T>> asList(

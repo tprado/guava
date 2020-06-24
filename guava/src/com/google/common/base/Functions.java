@@ -133,7 +133,7 @@ public final class Functions {
   }
 
   private static class FunctionForMapNoDefault<K, V> implements Function<K, V>, Serializable {
-    final Map<K, V> map;
+    Map<K, V> map;
 
     FunctionForMapNoDefault(Map<K, V> map) {
       this.map = checkNotNull(map);
@@ -165,12 +165,12 @@ public final class Functions {
       return "Functions.forMap(" + map + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   private static class ForMapWithDefault<K, V> implements Function<K, V>, Serializable {
-    final Map<K, ? extends V> map;
-    final @Nullable V defaultValue;
+    Map<K, ? extends V> map;
+    @Nullable V defaultValue;
 
     ForMapWithDefault(Map<K, ? extends V> map, @Nullable V defaultValue) {
       this.map = checkNotNull(map);
@@ -203,7 +203,7 @@ public final class Functions {
       return "Functions.forMap(" + map + ", defaultValue=" + defaultValue + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /**
@@ -223,8 +223,8 @@ public final class Functions {
   }
 
   private static class FunctionComposition<A, B, C> implements Function<A, C>, Serializable {
-    private final Function<B, C> g;
-    private final Function<A, ? extends B> f;
+    private Function<B, C> g;
+    private Function<A, ? extends B> f;
 
     public FunctionComposition(Function<B, C> g, Function<A, ? extends B> f) {
       this.g = checkNotNull(g);
@@ -256,7 +256,7 @@ public final class Functions {
       return g + "(" + f + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /**
@@ -273,7 +273,7 @@ public final class Functions {
 
   /** @see Functions#forPredicate */
   private static class PredicateFunction<T> implements Function<T, Boolean>, Serializable {
-    private final Predicate<T> predicate;
+    private Predicate<T> predicate;
 
     private PredicateFunction(Predicate<T> predicate) {
       this.predicate = checkNotNull(predicate);
@@ -303,7 +303,7 @@ public final class Functions {
       return "Functions.forPredicate(" + predicate + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /**
@@ -319,7 +319,7 @@ public final class Functions {
   }
 
   private static class ConstantFunction<E> implements Function<Object, E>, Serializable {
-    private final @Nullable E value;
+    private @Nullable E value;
 
     public ConstantFunction(@Nullable E value) {
       this.value = value;
@@ -349,7 +349,7 @@ public final class Functions {
       return "Functions.constant(" + value + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /**
@@ -366,7 +366,7 @@ public final class Functions {
   /** @see Functions#forSupplier */
   private static class SupplierFunction<T> implements Function<Object, T>, Serializable {
 
-    private final Supplier<T> supplier;
+    private Supplier<T> supplier;
 
     private SupplierFunction(Supplier<T> supplier) {
       this.supplier = checkNotNull(supplier);
@@ -396,6 +396,6 @@ public final class Functions {
       return "Functions.forSupplier(" + supplier + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 }

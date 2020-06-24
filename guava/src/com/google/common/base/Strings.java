@@ -150,16 +150,16 @@ public final class Strings {
     }
 
     // IF YOU MODIFY THE CODE HERE, you must update StringsRepeatBenchmark
-    final int len = string.length();
-    final long longSize = (long) len * (long) count;
-    final int size = (int) longSize;
+    int len = string.length();
+    long longSize = (long) len * (long) count;
+    int size = (int) longSize;
     if (size != longSize) {
       throw new ArrayIndexOutOfBoundsException("Required array size too large: " + longSize);
     }
 
-    final char[] array = new char[size];
+    char[] array = new char[size];
     string.getChars(0, len, array, 0);
-    int n;
+    @Mutable int n;
     for (n = len; n < size - n; n <<= 1) {
       System.arraycopy(array, 0, array, n, n);
     }
@@ -179,7 +179,7 @@ public final class Strings {
     checkNotNull(b);
 
     int maxPrefixLength = Math.min(a.length(), b.length());
-    int p = 0;
+    @Mutable int p = 0;
     while (p < maxPrefixLength && a.charAt(p) == b.charAt(p)) {
       p++;
     }
@@ -201,7 +201,7 @@ public final class Strings {
     checkNotNull(b);
 
     int maxSuffixLength = Math.min(a.length(), b.length());
-    int s = 0;
+    @Mutable int s = 0;
     while (s < maxSuffixLength && a.charAt(a.length() - s - 1) == b.charAt(b.length() - s - 1)) {
       s++;
     }
@@ -271,8 +271,8 @@ public final class Strings {
 
     // start substituting the arguments into the '%s' placeholders
     StringBuilder builder = new StringBuilder(template.length() + 16 * args.length);
-    int templateStart = 0;
-    int i = 0;
+    @Mutable int templateStart = 0;
+    @Mutable int i = 0;
     while (i < args.length) {
       int placeholderStart = template.indexOf("%s", templateStart);
       if (placeholderStart == -1) {

@@ -30,8 +30,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible(emulated = true)
 final class Platform {
-  private static final Logger logger = Logger.getLogger(Platform.class.getName());
-  private static final PatternCompiler patternCompiler = loadPatternCompiler();
+  private static Logger logger = Logger.getLogger(Platform.class.getName());
+  private static PatternCompiler patternCompiler = loadPatternCompiler();
 
   private Platform() {}
 

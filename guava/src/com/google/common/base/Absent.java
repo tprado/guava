@@ -20,11 +20,12 @@ import com.google.common.annotations.GwtCompatible;
 import java.util.Collections;
 import java.util.Set;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.PackagePrivate;
 
 /** Implementation of an {@link Optional} not containing a reference. */
 @GwtCompatible
 final class Absent<T> extends Optional<T> {
-  static final Absent<Object> INSTANCE = new Absent<>();
+  @PackagePrivate static Absent<Object> INSTANCE = new Absent<>();
 
   @SuppressWarnings("unchecked") // implementation is "fully variant"
   static <T> Optional<T> withType() {
@@ -95,5 +96,5 @@ final class Absent<T> extends Optional<T> {
     return INSTANCE;
   }
 
-  private static final long serialVersionUID = 0;
+  private static long serialVersionUID = 0;
 }

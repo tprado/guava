@@ -110,14 +110,14 @@ public enum StandardSystemProperty {
   /** User's current working directory. */
   USER_DIR("user.dir");
 
-  private final String key;
+  String key;
 
   StandardSystemProperty(String key) {
     this.key = key;
   }
 
   /** Returns the key used to lookup this system property. */
-  public String key() {
+  String key() {
     return key;
   }
 
@@ -125,13 +125,13 @@ public enum StandardSystemProperty {
    * Returns the current value for this system property by delegating to {@link
    * System#getProperty(String)}.
    */
-  public @Nullable String value() {
+  @Nullable String value() {
     return System.getProperty(key);
   }
 
   /** Returns a string representation of this system property. */
   @Override
-  public String toString() {
+  String toString() {
     return key() + "=" + value();
   }
 }

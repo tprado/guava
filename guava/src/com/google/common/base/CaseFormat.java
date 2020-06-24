@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Utility class for converting between various ASCII case formats. Behavior is undefined for
@@ -107,8 +108,8 @@ public enum CaseFormat {
     }
   };
 
-  private final CharMatcher wordBoundary;
-  private final String wordSeparator;
+  private CharMatcher wordBoundary;
+  private String wordSeparator;
 
   CaseFormat(CharMatcher wordBoundary, String wordSeparator) {
     this.wordBoundary = wordBoundary;
@@ -129,9 +130,9 @@ public enum CaseFormat {
   /** Enum values can override for performance reasons. */
   String convert(CaseFormat format, String s) {
     // deal with camel conversion
-    StringBuilder out = null;
-    int i = 0;
-    int j = -1;
+    @Mutable StringBuilder out = null;
+    @Mutable int i = 0;
+    @Mutable int j = -1;
     while ((j = wordBoundary.indexIn(s, ++j)) != -1) {
       if (i == 0) {
         // include some extra space for separators
@@ -160,8 +161,8 @@ public enum CaseFormat {
   private static final class StringConverter extends Converter<String, String>
       implements Serializable {
 
-    private final CaseFormat sourceFormat;
-    private final CaseFormat targetFormat;
+    private CaseFormat sourceFormat;
+    private CaseFormat targetFormat;
 
     StringConverter(CaseFormat sourceFormat, CaseFormat targetFormat) {
       this.sourceFormat = checkNotNull(sourceFormat);
@@ -197,7 +198,7 @@ public enum CaseFormat {
       return sourceFormat + ".converterTo(" + targetFormat + ")";
     }
 
-    private static final long serialVersionUID = 0L;
+    private static long serialVersionUID = 0L;
   }
 
   abstract String normalizeWord(String word);

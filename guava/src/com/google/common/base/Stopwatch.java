@@ -28,6 +28,8 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.j2objc.annotations.J2ObjCIncompatible;
+import ristretto.Mutable;
+
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
@@ -90,17 +92,17 @@ import java.util.concurrent.TimeUnit;
 @GwtCompatible(emulated = true)
 @SuppressWarnings("GoodTime") // lots of violations
 public final class Stopwatch {
-  private final Ticker ticker;
-  private boolean isRunning;
-  private long elapsedNanos;
-  private long startTick;
+  private Ticker ticker;
+  @Mutable private boolean isRunning;
+  @Mutable private long elapsedNanos;
+  @Mutable private long startTick;
 
   /**
    * Creates (but does not start) a new stopwatch using {@link System#nanoTime} as its time source.
    *
    * @since 15.0
    */
-  public static Stopwatch createUnstarted() {
+  static Stopwatch createUnstarted() {
     return new Stopwatch();
   }
 
@@ -109,7 +111,7 @@ public final class Stopwatch {
    *
    * @since 15.0
    */
-  public static Stopwatch createUnstarted(Ticker ticker) {
+  static Stopwatch createUnstarted(Ticker ticker) {
     return new Stopwatch(ticker);
   }
 
@@ -118,7 +120,7 @@ public final class Stopwatch {
    *
    * @since 15.0
    */
-  public static Stopwatch createStarted() {
+  static Stopwatch createStarted() {
     return new Stopwatch().start();
   }
 
@@ -127,7 +129,7 @@ public final class Stopwatch {
    *
    * @since 15.0
    */
-  public static Stopwatch createStarted(Ticker ticker) {
+  static Stopwatch createStarted(Ticker ticker) {
     return new Stopwatch(ticker).start();
   }
 
@@ -143,7 +145,7 @@ public final class Stopwatch {
    * Returns {@code true} if {@link #start()} has been called on this stopwatch, and {@link #stop()}
    * has not been called since the last call to {@code start()}.
    */
-  public boolean isRunning() {
+  boolean isRunning() {
     return isRunning;
   }
 
@@ -154,7 +156,7 @@ public final class Stopwatch {
    * @throws IllegalStateException if the stopwatch is already running.
    */
   @CanIgnoreReturnValue
-  public Stopwatch start() {
+  Stopwatch start() {
     checkState(!isRunning, "This stopwatch is already running.");
     isRunning = true;
     startTick = ticker.read();
@@ -169,7 +171,7 @@ public final class Stopwatch {
    * @throws IllegalStateException if the stopwatch is already stopped.
    */
   @CanIgnoreReturnValue
-  public Stopwatch stop() {
+  Stopwatch stop() {
     long tick = ticker.read();
     checkState(isRunning, "This stopwatch is already stopped.");
     isRunning = false;
@@ -183,7 +185,7 @@ public final class Stopwatch {
    * @return this {@code Stopwatch} instance
    */
   @CanIgnoreReturnValue
-  public Stopwatch reset() {
+  Stopwatch reset() {
     elapsedNanos = 0;
     isRunning = false;
     return this;
@@ -206,7 +208,7 @@ public final class Stopwatch {
    *
    * @since 14.0 (since 10.0 as {@code elapsedTime()})
    */
-  public long elapsed(TimeUnit desiredUnit) {
+  long elapsed(TimeUnit desiredUnit) {
     return desiredUnit.convert(elapsedNanos(), NANOSECONDS);
   }
 
@@ -218,13 +220,13 @@ public final class Stopwatch {
    */
   @GwtIncompatible
   @J2ObjCIncompatible
-  public Duration elapsed() {
+  Duration elapsed() {
     return Duration.ofNanos(elapsedNanos());
   }
 
   /** Returns a string representation of the current elapsed time. */
   @Override
-  public String toString() {
+  String toString() {
     long nanos = elapsedNanos();
 
     TimeUnit unit = chooseUnit(nanos);

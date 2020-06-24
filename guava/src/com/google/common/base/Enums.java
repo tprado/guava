@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Utility methods for working with {@link Enum} instances.
@@ -70,7 +71,7 @@ public final class Enums {
   }
 
   @GwtIncompatible // java.lang.ref.WeakReference
-  private static final Map<Class<? extends Enum<?>>, Map<String, WeakReference<? extends Enum<?>>>>
+  private static Map<Class<? extends Enum<?>>, Map<String, WeakReference<? extends Enum<?>>>>
       enumConstantCache = new WeakHashMap<>();
 
   @GwtIncompatible // java.lang.ref.WeakReference
@@ -88,7 +89,7 @@ public final class Enums {
   static <T extends Enum<T>> Map<String, WeakReference<? extends Enum<?>>> getEnumConstants(
       Class<T> enumClass) {
     synchronized (enumConstantCache) {
-      Map<String, WeakReference<? extends Enum<?>>> constants = enumConstantCache.get(enumClass);
+      @Mutable Map<String, WeakReference<? extends Enum<?>>> constants = enumConstantCache.get(enumClass);
       if (constants == null) {
         constants = populateCache(enumClass);
       }
@@ -104,14 +105,14 @@ public final class Enums {
    *
    * @since 16.0
    */
-  public static <T extends Enum<T>> Converter<String, T> stringConverter(final Class<T> enumClass) {
+  public static <T extends Enum<T>> Converter<String, T> stringConverter(Class<T> enumClass) {
     return new StringConverter<T>(enumClass);
   }
 
   private static final class StringConverter<T extends Enum<T>> extends Converter<String, T>
       implements Serializable {
 
-    private final Class<T> enumClass;
+    private Class<T> enumClass;
 
     StringConverter(Class<T> enumClass) {
       this.enumClass = checkNotNull(enumClass);
@@ -146,6 +147,6 @@ public final class Enums {
       return "Enums.stringConverter(" + enumClass.getName() + ".class)";
     }
 
-    private static final long serialVersionUID = 0L;
+    private static long serialVersionUID = 0L;
   }
 }

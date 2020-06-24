@@ -183,8 +183,8 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
    * @since 10.0
    */
   public static final class Wrapper<T> implements Serializable {
-    private final Equivalence<? super T> equivalence;
-    private final @Nullable T reference;
+    private Equivalence<? super T> equivalence;
+    private @Nullable T reference;
 
     private Wrapper(Equivalence<? super T> equivalence, @Nullable T reference) {
       this.equivalence = checkNotNull(equivalence);
@@ -237,7 +237,7 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
       return equivalence + ".wrap(" + reference + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /**
@@ -270,8 +270,8 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
 
   private static final class EquivalentToPredicate<T> implements Predicate<T>, Serializable {
 
-    private final Equivalence<T> equivalence;
-    private final @Nullable T target;
+    private Equivalence<T> equivalence;
+    private @Nullable T target;
 
     EquivalentToPredicate(Equivalence<T> equivalence, @Nullable T target) {
       this.equivalence = checkNotNull(equivalence);
@@ -305,7 +305,7 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
       return equivalence + ".equivalentTo(" + target + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /**
@@ -336,7 +336,7 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
 
   static final class Equals extends Equivalence<Object> implements Serializable {
 
-    static final Equals INSTANCE = new Equals();
+    static Equals INSTANCE = new Equals();
 
     @Override
     protected boolean doEquivalent(Object a, Object b) {
@@ -352,12 +352,12 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
       return INSTANCE;
     }
 
-    private static final long serialVersionUID = 1;
+    private static long serialVersionUID = 1;
   }
 
   static final class Identity extends Equivalence<Object> implements Serializable {
 
-    static final Identity INSTANCE = new Identity();
+    static Identity INSTANCE = new Identity();
 
     @Override
     protected boolean doEquivalent(Object a, Object b) {
@@ -373,6 +373,6 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
       return INSTANCE;
     }
 
-    private static final long serialVersionUID = 1;
+    private static long serialVersionUID = 1;
   }
 }

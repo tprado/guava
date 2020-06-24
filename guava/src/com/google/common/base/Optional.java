@@ -331,13 +331,13 @@ public abstract class Optional<T> implements Serializable {
    */
   @Beta
   public static <T> Iterable<T> presentInstances(
-      final Iterable<? extends Optional<? extends T>> optionals) {
+      Iterable<? extends Optional<? extends T>> optionals) {
     checkNotNull(optionals);
     return new Iterable<T>() {
       @Override
       public Iterator<T> iterator() {
         return new AbstractIterator<T>() {
-          private final Iterator<? extends Optional<? extends T>> iterator =
+          private Iterator<? extends Optional<? extends T>> iterator =
               checkNotNull(optionals.iterator());
 
           @Override
@@ -355,5 +355,5 @@ public abstract class Optional<T> implements Serializable {
     };
   }
 
-  private static final long serialVersionUID = 0;
+  private static long serialVersionUID = 0;
 }

@@ -31,10 +31,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @GwtCompatible
 final class FunctionalEquivalence<F, T> extends Equivalence<F> implements Serializable {
 
-  private static final long serialVersionUID = 0;
+  private static long serialVersionUID = 0;
 
-  private final Function<F, ? extends T> function;
-  private final Equivalence<T> resultEquivalence;
+  private Function<F, ? extends T> function;
+  private Equivalence<T> resultEquivalence;
 
   FunctionalEquivalence(Function<F, ? extends T> function, Equivalence<T> resultEquivalence) {
     this.function = checkNotNull(function);

@@ -17,6 +17,9 @@ package com.google.common.base;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher.NamedFastMatcher;
+import ristretto.Mutable;
+import ristretto.PackagePrivate;
+
 import java.util.BitSet;
 
 /**
@@ -27,10 +30,10 @@ import java.util.BitSet;
  */
 @GwtIncompatible // no precomputation is done in GWT
 final class SmallCharMatcher extends NamedFastMatcher {
-  static final int MAX_SIZE = 1023;
-  private final char[] table;
-  private final boolean containsZero;
-  private final long filter;
+  @PackagePrivate static int MAX_SIZE = 1023;
+  private char[] table;
+  private boolean containsZero;
+  private long filter;
 
   private SmallCharMatcher(char[] table, long filter, boolean containsZero, String description) {
     super(description);
@@ -39,8 +42,8 @@ final class SmallCharMatcher extends NamedFastMatcher {
     this.containsZero = containsZero;
   }
 
-  private static final int C1 = 0xcc9e2d51;
-  private static final int C2 = 0x1b873593;
+  private static int C1 = 0xcc9e2d51;
+  private static int C2 = 0x1b873593;
 
   /*
    * This method was rewritten in Java from an intermediate step of the Murmur hash function in
@@ -62,7 +65,7 @@ final class SmallCharMatcher extends NamedFastMatcher {
   // of dependencies.
 
   // Represents how tightly we can pack things, as a maximum.
-  private static final double DESIRED_LOAD_FACTOR = 0.5;
+  private static double DESIRED_LOAD_FACTOR = 0.5;
 
   /**
    * Returns an array size suitable for the backing array of a hash table that uses open addressing
@@ -76,7 +79,7 @@ final class SmallCharMatcher extends NamedFastMatcher {
     }
     // Correct the size for open addressing to match desired load factor.
     // Round up to the next highest power of 2.
-    int tableSize = Integer.highestOneBit(setSize - 1) << 1;
+    @Mutable int tableSize = Integer.highestOneBit(setSize - 1) << 1;
     while (tableSize * DESIRED_LOAD_FACTOR < setSize) {
       tableSize <<= 1;
     }
@@ -85,7 +88,7 @@ final class SmallCharMatcher extends NamedFastMatcher {
 
   static CharMatcher from(BitSet chars, String description) {
     // Compute the filter.
-    long filter = 0;
+    @Mutable long filter = 0;
     int size = chars.cardinality();
     boolean containsZero = chars.get(0);
     // Compute the hash table.
@@ -94,7 +97,7 @@ final class SmallCharMatcher extends NamedFastMatcher {
     for (int c = chars.nextSetBit(0); c != -1; c = chars.nextSetBit(c + 1)) {
       // Compute the filter at the same time.
       filter |= 1L << c;
-      int index = smear(c) & mask;
+      @Mutable int index = smear(c) & mask;
       while (true) {
         // Check for empty.
         if (table[index] == 0) {
@@ -118,7 +121,7 @@ final class SmallCharMatcher extends NamedFastMatcher {
     }
     int mask = table.length - 1;
     int startingIndex = smear(c) & mask;
-    int index = startingIndex;
+    @Mutable int index = startingIndex;
     do {
       if (table[index] == 0) { // Check for empty.
         return false;

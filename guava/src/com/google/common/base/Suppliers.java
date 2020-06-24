@@ -22,6 +22,7 @@ import com.google.common.annotations.VisibleForTesting;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
 
 /**
  * Useful suppliers.
@@ -47,8 +48,8 @@ public final class Suppliers {
   }
 
   private static class SupplierComposition<F, T> implements Supplier<T>, Serializable {
-    final Function<? super F, T> function;
-    final Supplier<F> supplier;
+    Function<? super F, T> function;
+    Supplier<F> supplier;
 
     SupplierComposition(Function<? super F, T> function, Supplier<F> supplier) {
       this.function = checkNotNull(function);
@@ -79,7 +80,7 @@ public final class Suppliers {
       return "Suppliers.compose(" + function + ", " + supplier + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /**
@@ -110,11 +111,11 @@ public final class Suppliers {
 
   @VisibleForTesting
   static class MemoizingSupplier<T> implements Supplier<T>, Serializable {
-    final Supplier<T> delegate;
+    Supplier<T> delegate;
     transient volatile boolean initialized;
     // "value" does not need to be volatile; visibility piggy-backs
     // on volatile read of "initialized".
-    transient @Nullable T value;
+    @Mutable transient @Nullable T value;
 
     MemoizingSupplier(Supplier<T> delegate) {
       this.delegate = checkNotNull(delegate);
@@ -143,7 +144,7 @@ public final class Suppliers {
           + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   @VisibleForTesting
@@ -152,7 +153,7 @@ public final class Suppliers {
     volatile boolean initialized;
     // "value" does not need to be volatile; visibility piggy-backs
     // on volatile read of "initialized".
-    @Nullable T value;
+    @Mutable @Nullable T value;
 
     NonSerializableMemoizingSupplier(Supplier<T> delegate) {
       this.delegate = checkNotNull(delegate);
@@ -215,9 +216,9 @@ public final class Suppliers {
   @VisibleForTesting
   @SuppressWarnings("GoodTime") // lots of violations
   static class ExpiringMemoizingSupplier<T> implements Supplier<T>, Serializable {
-    final Supplier<T> delegate;
-    final long durationNanos;
-    transient volatile @Nullable T value;
+    Supplier<T> delegate;
+    long durationNanos;
+    @Mutable transient volatile @Nullable T value;
     // The special value 0 means "not yet initialized".
     transient volatile long expirationNanos;
 
@@ -235,7 +236,7 @@ public final class Suppliers {
       // putting our fields into a holder class, but (at least on x86)
       // the extra memory consumption and indirection are more
       // expensive than the extra volatile reads.
-      long nanos = expirationNanos;
+      @Mutable long nanos = expirationNanos;
       long now = Platform.systemNanoTime();
       if (nanos == 0 || now - nanos >= 0) {
         synchronized (this) {
@@ -260,7 +261,7 @@ public final class Suppliers {
       return "Suppliers.memoizeWithExpiration(" + delegate + ", " + durationNanos + ", NANOS)";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /** Returns a supplier that always supplies {@code instance}. */
@@ -269,7 +270,7 @@ public final class Suppliers {
   }
 
   private static class SupplierOfInstance<T> implements Supplier<T>, Serializable {
-    final @Nullable T instance;
+    @Nullable T instance;
 
     SupplierOfInstance(@Nullable T instance) {
       this.instance = instance;
@@ -299,7 +300,7 @@ public final class Suppliers {
       return "Suppliers.ofInstance(" + instance + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /**
@@ -311,7 +312,7 @@ public final class Suppliers {
   }
 
   private static class ThreadSafeSupplier<T> implements Supplier<T>, Serializable {
-    final Supplier<T> delegate;
+    Supplier<T> delegate;
 
     ThreadSafeSupplier(Supplier<T> delegate) {
       this.delegate = checkNotNull(delegate);
@@ -329,7 +330,7 @@ public final class Suppliers {
       return "Suppliers.synchronizedSupplier(" + delegate + ")";
     }
 
-    private static final long serialVersionUID = 0;
+    private static long serialVersionUID = 0;
   }
 
   /**

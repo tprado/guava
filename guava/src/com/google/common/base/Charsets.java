@@ -42,7 +42,7 @@ public final class Charsets {
    *
    */
   @GwtIncompatible // Charset not supported by GWT
-  public static final Charset US_ASCII = Charset.forName("US-ASCII");
+  public static Charset US_ASCII = Charset.forName("US-ASCII");
 
   /**
    * ISO-8859-1: ISO Latin Alphabet Number 1 (ISO-LATIN-1).
@@ -51,7 +51,7 @@ public final class Charsets {
    * java.nio.charset.StandardCharsets#ISO_8859_1} instead.
    *
    */
-  public static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
+  public static Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
 
   /**
    * UTF-8: eight-bit UCS Transformation Format.
@@ -60,7 +60,7 @@ public final class Charsets {
    * java.nio.charset.StandardCharsets#UTF_8} instead.
    *
    */
-  public static final Charset UTF_8 = Charset.forName("UTF-8");
+  public static Charset UTF_8 = Charset.forName("UTF-8");
 
   /**
    * UTF-16BE: sixteen-bit UCS Transformation Format, big-endian byte order.
@@ -70,7 +70,7 @@ public final class Charsets {
    *
    */
   @GwtIncompatible // Charset not supported by GWT
-  public static final Charset UTF_16BE = Charset.forName("UTF-16BE");
+  public static Charset UTF_16BE = Charset.forName("UTF-16BE");
 
   /**
    * UTF-16LE: sixteen-bit UCS Transformation Format, little-endian byte order.
@@ -80,7 +80,7 @@ public final class Charsets {
    *
    */
   @GwtIncompatible // Charset not supported by GWT
-  public static final Charset UTF_16LE = Charset.forName("UTF-16LE");
+  public static Charset UTF_16LE = Charset.forName("UTF-16LE");
 
   /**
    * UTF-16: sixteen-bit UCS Transformation Format, byte order identified by an optional byte-order
@@ -91,7 +91,7 @@ public final class Charsets {
    *
    */
   @GwtIncompatible // Charset not supported by GWT
-  public static final Charset UTF_16 = Charset.forName("UTF-16");
+  public static Charset UTF_16 = Charset.forName("UTF-16");
 
   /*
    * Please do not add new Charset references to this class, unless those character encodings are

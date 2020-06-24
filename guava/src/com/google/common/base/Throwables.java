@@ -255,10 +255,10 @@ public final class Throwables {
   public static Throwable getRootCause(@Mutable Throwable throwable) {
     // Keep a second pointer that slowly walks the causal chain. If the fast pointer ever catches
     // the slower pointer, then there's a loop.
-    Throwable slowPointer = throwable;
-    boolean advanceSlowPointer = false;
+    @Mutable Throwable slowPointer = throwable;
+    @Mutable boolean advanceSlowPointer = false;
 
-    Throwable cause;
+    @Mutable Throwable cause;
     while ((cause = throwable.getCause()) != null) {
       throwable = cause;
 
@@ -297,10 +297,10 @@ public final class Throwables {
 
     // Keep a second pointer that slowly walks the causal chain. If the fast pointer ever catches
     // the slower pointer, then there's a loop.
-    Throwable slowPointer = throwable;
-    boolean advanceSlowPointer = false;
+    @Mutable Throwable slowPointer = throwable;
+    @Mutable boolean advanceSlowPointer = false;
 
-    Throwable cause;
+    @Mutable Throwable cause;
     while ((cause = throwable.getCause()) != null) {
       throwable = cause;
       causes.add(throwable);
@@ -404,7 +404,7 @@ public final class Throwables {
   }
 
   @GwtIncompatible // invokeAccessibleNonThrowingMethod
-  private static List<StackTraceElement> jlaStackTrace(final Throwable t) {
+  private static List<StackTraceElement> jlaStackTrace(Throwable t) {
     checkNotNull(t);
     /*
      * TODO(cpovirk): Consider optimizing iterator() to catch IOOBE instead of doing bounds checks.
@@ -440,23 +440,23 @@ public final class Throwables {
 
   /** JavaLangAccess class name to load using reflection */
   @GwtIncompatible // not used by GWT emulation
-  private static final String JAVA_LANG_ACCESS_CLASSNAME = "sun.misc.JavaLangAccess";
+  private static String JAVA_LANG_ACCESS_CLASSNAME = "sun.misc.JavaLangAccess";
 
   /** SharedSecrets class name to load using reflection */
   @GwtIncompatible // not used by GWT emulation
   @VisibleForTesting
-  static final String SHARED_SECRETS_CLASSNAME = "sun.misc.SharedSecrets";
+  static String SHARED_SECRETS_CLASSNAME = "sun.misc.SharedSecrets";
 
   /** Access to some fancy internal JVM internals. */
   @GwtIncompatible // java.lang.reflect
-  private static final @Nullable Object jla = getJLA();
+  private static @Nullable Object jla = getJLA();
 
   /**
    * The "getStackTraceElementMethod" method, only available on some JDKs so we use reflection to
    * find it when available. When this is null, use the slow way.
    */
   @GwtIncompatible // java.lang.reflect
-  private static final @Nullable Method getStackTraceElementMethod =
+  private static @Nullable Method getStackTraceElementMethod =
       (jla == null) ? null : getGetMethod();
 
   /**
@@ -464,7 +464,7 @@ public final class Throwables {
    * when available. When this is null, use the slow way.
    */
   @GwtIncompatible // java.lang.reflect
-  private static final @Nullable Method getStackTraceDepthMethod =
+  private static @Nullable Method getStackTraceDepthMethod =
       (jla == null) ? null : getSizeMethod();
 
   /**

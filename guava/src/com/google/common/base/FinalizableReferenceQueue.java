@@ -28,6 +28,8 @@ import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
+import ristretto.PackagePrivate;
 
 /**
  * A reference queue with an associated background thread that dequeues references and invokes
@@ -130,12 +132,12 @@ public class FinalizableReferenceQueue implements Closeable {
    * https://github.com/google/guava/issues/3086 for more information.
    */
 
-  private static final Logger logger = Logger.getLogger(FinalizableReferenceQueue.class.getName());
+  private static Logger logger = Logger.getLogger(FinalizableReferenceQueue.class.getName());
 
-  private static final String FINALIZER_CLASS_NAME = "com.google.common.base.internal.Finalizer";
+  private static String FINALIZER_CLASS_NAME = "com.google.common.base.internal.Finalizer";
 
   /** Reference to Finalizer.startFinalizer(). */
-  private static final Method startFinalizer;
+  private static Method startFinalizer;
 
   static {
     Class<?> finalizer =
@@ -144,19 +146,19 @@ public class FinalizableReferenceQueue implements Closeable {
   }
 
   /** The actual reference queue that our background thread will poll. */
-  final ReferenceQueue<Object> queue;
+  @PackagePrivate ReferenceQueue<Object> queue;
 
-  final PhantomReference<Object> frqRef;
+  PhantomReference<Object> frqRef;
 
   /** Whether or not the background thread started successfully. */
-  final boolean threadStarted;
+  boolean threadStarted;
 
   /** Constructs a new queue. */
-  public FinalizableReferenceQueue() {
+  FinalizableReferenceQueue() {
     // We could start the finalizer lazily, but I'd rather it blow up early.
     queue = new ReferenceQueue<>();
     frqRef = new PhantomReference<Object>(this, queue);
-    boolean threadStarted = false;
+    @Mutable boolean threadStarted = false;
     try {
       startFinalizer.invoke(null, FinalizableReference.class, queue, frqRef);
       threadStarted = true;
@@ -174,7 +176,7 @@ public class FinalizableReferenceQueue implements Closeable {
   }
 
   @Override
-  public void close() {
+  void close() {
     frqRef.enqueue();
     cleanUp();
   }
@@ -189,7 +191,7 @@ public class FinalizableReferenceQueue implements Closeable {
       return;
     }
 
-    Reference<?> reference;
+    @Mutable Reference<?> reference;
     while ((reference = queue.poll()) != null) {
       /*
        * This is for the benefit of phantom references. Weak and soft references will have already
@@ -239,10 +241,10 @@ public class FinalizableReferenceQueue implements Closeable {
   static class SystemLoader implements FinalizerLoader {
     // This is used by the ClassLoader-leak test in FinalizableReferenceQueueTest to disable
     // finding Finalizer on the system class path even if it is there.
-    @VisibleForTesting static boolean disabled;
+    @Mutable @VisibleForTesting static boolean disabled;
 
     @Override
-    public @Nullable Class<?> loadFinalizer() {
+    @Nullable Class<?> loadFinalizer() {
       if (disabled) {
         return null;
       }
@@ -272,14 +274,14 @@ public class FinalizableReferenceQueue implements Closeable {
    * it would prevent our class loader from getting garbage collected.
    */
   static class DecoupledLoader implements FinalizerLoader {
-    private static final String LOADING_ERROR =
+    static String LOADING_ERROR =
         "Could not load Finalizer in its own class loader. Loading Finalizer in the current class "
             + "loader instead. As a result, you will not be able to garbage collect this class "
             + "loader. To support reclaiming this class loader, either resolve the underlying "
             + "issue, or move Guava to your system class path.";
 
     @Override
-    public @Nullable Class<?> loadFinalizer() {
+    @Nullable Class<?> loadFinalizer() {
       try {
         /*
          * We use URLClassLoader because it's the only concrete class loader implementation in the
@@ -308,7 +310,7 @@ public class FinalizableReferenceQueue implements Closeable {
       }
 
       // Find URL pointing to base of class path.
-      String urlString = finalizerUrl.toString();
+      @Mutable String urlString = finalizerUrl.toString();
       if (!urlString.endsWith(finalizerPath)) {
         throw new IOException("Unsupported path style: " + urlString);
       }
@@ -331,7 +333,7 @@ public class FinalizableReferenceQueue implements Closeable {
    */
   static class DirectLoader implements FinalizerLoader {
     @Override
-    public Class<?> loadFinalizer() {
+    Class<?> loadFinalizer() {
       try {
         return Class.forName(FINALIZER_CLASS_NAME);
       } catch (ClassNotFoundException e) {

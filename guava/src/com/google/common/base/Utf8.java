@@ -20,6 +20,7 @@ import static java.lang.Character.MIN_SURROGATE;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import ristretto.Mutable;
 
 /**
  * Low-level, high-performance utility methods related to the {@linkplain Charsets#UTF_8 UTF-8}
@@ -50,8 +51,8 @@ public final class Utf8 {
   public static int encodedLength(CharSequence sequence) {
     // Warning to maintainers: this implementation is highly optimized.
     int utf16Length = sequence.length();
-    int utf8Length = utf16Length;
-    int i = 0;
+    @Mutable int utf8Length = utf16Length;
+    @Mutable int i = 0;
 
     // This loop optimizes for pure ASCII.
     while (i < utf16Length && sequence.charAt(i) < 0x80) {
@@ -79,7 +80,7 @@ public final class Utf8 {
 
   private static int encodedLengthGeneral(CharSequence sequence, int start) {
     int utf16Length = sequence.length();
-    int utf8Length = 0;
+    @Mutable int utf8Length = 0;
     for (int i = start; i < utf16Length; i++) {
       char c = sequence.charAt(i);
       if (c < 0x800) {
@@ -135,9 +136,9 @@ public final class Utf8 {
   }
 
   private static boolean isWellFormedSlowPath(byte[] bytes, int off, int end) {
-    int index = off;
+    @Mutable int index = off;
     while (true) {
-      int byte1;
+      @Mutable int byte1;
 
       // Optimize for interior runs of ASCII bytes.
       do {

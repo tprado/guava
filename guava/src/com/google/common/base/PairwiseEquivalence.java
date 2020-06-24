@@ -18,11 +18,13 @@ import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
 import java.util.Iterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import ristretto.Mutable;
+import ristretto.PackagePrivate;
 
 @GwtCompatible(serializable = true)
 final class PairwiseEquivalence<T> extends Equivalence<Iterable<T>> implements Serializable {
 
-  final Equivalence<? super T> elementEquivalence;
+  @PackagePrivate Equivalence<? super T> elementEquivalence;
 
   PairwiseEquivalence(Equivalence<? super T> elementEquivalence) {
     this.elementEquivalence = Preconditions.checkNotNull(elementEquivalence);
@@ -44,7 +46,7 @@ final class PairwiseEquivalence<T> extends Equivalence<Iterable<T>> implements S
 
   @Override
   protected int doHash(Iterable<T> iterable) {
-    int hash = 78721;
+    @Mutable int hash = 78721;
     for (T element : iterable) {
       hash = hash * 24943 + elementEquivalence.hash(element);
     }
@@ -71,5 +73,5 @@ final class PairwiseEquivalence<T> extends Equivalence<Iterable<T>> implements S
     return elementEquivalence + ".pairwise()";
   }
 
-  private static final long serialVersionUID = 1;
+  private static long serialVersionUID = 1;
 }

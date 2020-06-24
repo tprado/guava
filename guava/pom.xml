@@ -15,6 +15,9 @@
     utility classes, google's collections, io classes, and much
     much more.
   </description>
+  <properties>
+    <ristretto.args>--ignore-packages=com.google.common.base.internal,com.google.common.cache,com.google.common.collect,com.google.common.escape,com.google.common.eventbus,com.google.common.graph,com.google.common.hash,com.google.common.html,com.google.common.io,com.google.common.math,com.google.common.net,com.google.common.primitives,com.google.common.reflect,com.google.common.util.concurrent,com.google.common.xml,com.google.thirdparty.publicsuffix</ristretto.args>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>io.github.tprado</groupId>
@@ -98,6 +101,7 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+          <showWarnings>true</showWarnings>
           <annotationProcessorPaths>
             <annotationProcessorPath>
               <groupId>io.github.tprado</groupId>
@@ -106,7 +110,7 @@
             </annotationProcessorPath>
           </annotationProcessorPaths>
           <compilerArgs>
-            <arg>-Xplugin:ristretto</arg>
+            <arg>-Xplugin:ristretto ${ristretto.args}</arg>
           </compilerArgs>
         </configuration>
       </plugin>
